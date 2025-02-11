@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text and Image Plagiarism Detection System</title>
+    <link rel="stylesheet" href="TAIPD.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Text and Image Plagiarism Detection System</h1>
+    </header>
+
+    <main>
+      <section class="upload-section">
+        <h2>Upload Files for Plagiarism Detection</h2>
+        <form id="upload-form" enctype="multipart/form-data">
+          <label for="text-file">Upload Text File:</label>
+          <input
+            type="file"
+            id="text-file"
+            name="text-file"
+            accept=".txt,.docx,.pdf"
+          /><br /><br />
+
+          <label for="image-file">Upload Image File:</label>
+          <input
+            type="file"
+            id="image-file"
+            name="image-file"
+            accept="image/*"
+          /><br /><br />
+
+          <button type="button" onclick="submitFiles()">Submit</button>
+        </form>
+
+        <div id="results">
+          <h3>Results:</h3>
+          <pre id="output"></pre>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      async function submitFiles() {
+        const formData = new FormData(document.getElementById("upload-form"));
+        try {
+          const response = await fetch("http://localhost:5000/detect", {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await response.json();
+          document.getElementById("output").textContent = JSON.stringify(
+            result,
+            null,
+            2
+          );
+        } catch (error) {
+          document.getElementById(
+            "output"
+          ).textContent = `Error: ${error.message}`;
+        }
+      }
+    </script>
+  </body>
+</html>
